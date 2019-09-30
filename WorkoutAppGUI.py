@@ -6,8 +6,13 @@ import WAMethods
 
 
 class AppDriver(tk.Tk):
-
+    """
+    Main Driver behind app. This class initializes all Frames, switches them, and refreshes them.
+    """
     def __init__(self, *args, **kwargs):
+        """
+        Initializes the Frames and their sizes, and displays Main Menu
+        """
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "Naveen's Workout Organizer")
         tk.Tk.wm_geometry(self, "600x575")
@@ -27,10 +32,19 @@ class AppDriver(tk.Tk):
         self.show_frame("MainMenu")
 
     def show_frame(self, page_name):
+        """
+        This method switches frames that are visible to user.
+        :param page_name: Name of the Frame to be shown
+        :return: None
+        """
         frame = self.frames[page_name]
         frame.tkraise()
 
     def refresh_all(self):
+        """
+        Refreshes all Frames after a modification in the Exercise list
+        :return: None
+        """
         for page in (ViewExercises, AddExercisePageOne, AddExercisePageTwo, AddExercisePageThree,
                      RemoveExercise, ChangeName, ChangeMusclePageOne, ChangeMusclePageTwo, AddEquipment,
                      RemoveEquipment):
@@ -39,10 +53,19 @@ class AppDriver(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
     def refresh_view(self):
+        """
+        Refreshes the ViewExercises frame only. This method serves no current use for now.
+        :return: None
+        """
         self.frames["ViewExercises"] = ViewExercises(parent=self.container, controller=self)
         self.frames["ViewExercises"].grid(row=0, column=0, sticky="nsew")
 
     def refresh_add_exercise(self):
+        """
+        Refreshes the AddExercises frames only. Used when the user exits the AddExercise frames
+        with or without adding an exercise.
+        :return: None
+        """
         self.frames["AddExercisePageOne"] = AddExercisePageOne(parent=self.container, controller=self)
         self.frames["AddExercisePageOne"].grid(row=0, column=0, sticky="nsew")
         self.frames["AddExercisePageTwo"] = AddExercisePageTwo(parent=self.container, controller=self)
@@ -51,27 +74,53 @@ class AppDriver(tk.Tk):
         self.frames["AddExercisePageThree"].grid(row=0, column=0, sticky="nsew")
 
     def refresh_remove_exercise(self):
+        """
+        Refreshes the RemoveExercise frame only. Used when the user exits the RemoveExercise frame
+        with or without removing an exercise.
+        :return: None
+        """
         self.frames["RemoveExercise"] = RemoveExercise(parent=self.container, controller=self)
         self.frames["RemoveExercise"].grid(row=0, column=0, sticky="nsew")
 
     def refresh_change_name(self):
+        """
+        Refreshes the ChangeName frame only. Used when the user exits the ChangeName frame
+        with or without changing the name of an exercise.
+        :return: None
+        """
         self.frames["ChangeName"] = ChangeName(parent=self.container, controller=self)
         self.frames["ChangeName"].grid(row=0, column=0, sticky="nsew")
 
     def refresh_change_muscle(self):
+        """
+        Refreshes the ChangeMuscle frames only. Used when the user exits the ChangeMuscle frames
+        with or without changing the main muscle of an exercise.
+        :return: None
+        """
         self.frames["ChangeMusclePageOne"] = ChangeMusclePageOne(parent=self.container, controller=self)
         self.frames["ChangeMusclePageOne"].grid(row=0, column=0, sticky="nsew")
         self.frames["ChangeMusclePageTwo"] = ChangeMusclePageTwo(parent=self.container, controller=self)
         self.frames["ChangeMusclePageTwo"].grid(row=0, column=0, sticky="nsew")
 
     def refresh_save(self):
+        """
+        Refreshes the Save frame only. Used when the user exits the Save frame.
+        :return: None
+        """
         self.frames["Save"] = Save(parent=self.container, controller=self)
         self.frames["Save"].grid(row=0, column=0, sticky="nsew")
 
 
 class MainMenu(tk.Frame):
-
+    """
+    This Frame is the Main Menu and allows navigation throughout the app.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes the MainMenu frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -107,8 +156,16 @@ class MainMenu(tk.Frame):
 
 
 class ViewExercises(tk.Frame):
-
+    """
+    This Frame views the current exercises (including the equipment needed and
+     reference links) in the user's list.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes ViewExercises frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -122,6 +179,11 @@ class ViewExercises(tk.Frame):
 
     @staticmethod
     def view_list(window):
+        """
+        Displays list of exercises on ViewExercises frame
+        :param window: Allows access to the ViewExercises frame
+        :return: None
+        """
         scrollbar_y = tk.Scrollbar(window)
         scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
         # scrollbarX = tk.Scrollbar(window)
@@ -170,8 +232,15 @@ class ViewExercises(tk.Frame):
 
 
 class AddExercisePageOne(tk.Frame):
-
+    """
+    This Frame asks the user for the new exercise's name and main muscle.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes AddExercisePageOne frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.error_message = False
@@ -199,6 +268,10 @@ class AddExercisePageOne(tk.Frame):
         self.exit_but.pack(pady=5)
 
     def check(self):
+        """
+        Checks to make sure all entries and selections are valid choices
+        :return: None
+        """
         if not any(self.exercise_entry.get()) and not self.error_message:
             self.error_label.pack()
             self.error_message = True
@@ -206,13 +279,24 @@ class AddExercisePageOne(tk.Frame):
             self.controller.show_frame("AddExercisePageTwo")
 
     def exit(self):
+        """
+        Returns user to MainMenu
+        :return: None
+        """
         self.controller.refresh_add_exercise()
         self.controller.show_frame("MainMenu")
 
 
 class AddExercisePageTwo(tk.Frame):
-
+    """
+    This Frame asks the user for the new exercise's equipment. (Optional)
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes AddExercisePageTwo frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -248,12 +332,24 @@ class AddExercisePageTwo(tk.Frame):
         self.exit_but.pack(pady=5)
 
     def exit(self):
+        """
+        Returns to MainMenu
+        :return: None
+        """
         self.controller.refresh_add_exercise()
         self.controller.show_frame("MainMenu")
 
 
 class AddExercisePageThree(tk.Frame):
+    """
+    This Frame asks the user for a reference to anything related to the new exercise. (Optional)
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes AddExercisePageThree frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -283,6 +379,10 @@ class AddExercisePageThree(tk.Frame):
         self.exit_but.pack(pady=5)
 
     def add_exercise(self):
+        """
+        Uses entries in all AddExercisePages to initialize a new Exercise object, and to add it to the list.
+        :return: None
+        """
         muscle_group = WAMethods.get_muscle_group(self.controller.frames["AddExercisePageOne"].group_name.get(),
                                   push_list, pull_list, legs_list)
         muscle_name = self.controller.frames["AddExercisePageOne"].muscle_name.get()
@@ -315,13 +415,24 @@ class AddExercisePageThree(tk.Frame):
         self.controller.show_frame("ViewExercises")
 
     def exit(self):
+        """
+        Returns to MainMenu
+        :return: None
+        """
         self.controller.refresh_add_exercise()
         self.controller.show_frame("MainMenu")
 
 
 class RemoveExercise(tk.Frame):
-
+    """
+    This Frame asks the user which exercise they want to remove, and then removes it.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes RemoveExercise frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.error_message = False
@@ -339,6 +450,10 @@ class RemoveExercise(tk.Frame):
         self.exit_but.pack(pady=10)
 
     def check(self):
+        """
+        Checks entries and selections to make sure they are valid
+        :return: None
+        """
         if self.exercise_name.get() == "None" and not self.error_message:
             self.error_label.pack()
             self.error_message = True
@@ -346,6 +461,10 @@ class RemoveExercise(tk.Frame):
             self.remove_exercise()
 
     def remove_exercise(self):
+        """
+        Removes the desired exercise using the information provided by the user in the RemoveExercise frame,
+        :return: None
+        """
         muscle_group = WAMethods.get_muscle_group(self.group_name.get(), push_list, pull_list, legs_list)
 
         muscle_group[self.muscle_name.get()].pop(self.exercise_name.get())
@@ -355,13 +474,24 @@ class RemoveExercise(tk.Frame):
         self.controller.show_frame("RemoveExercise")
 
     def exit(self):
+        """
+        Returns to MainMenu
+        :return: None
+        """
         self.controller.refresh_remove_exercise()
         self.controller.show_frame("MainMenu")
 
 
 class ModifyMenu(tk.Frame):
-
+    """
+    This Frame allows the user to navigate more specific settings to modify an exercise's details.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes ModifyMenu frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -372,9 +502,9 @@ class ModifyMenu(tk.Frame):
         self.change_main_but = tk.Button(self, text="Change Main Muscle",
                                         command=lambda: self.controller.show_frame("ChangeMusclePageOne"),
                                          width=20, height=3)
-        self.add_equipment_but = tk.Button(self, text="Add Equipment", command=helloCallBack, width=20, height=3)
-        self.remove_equipment_but = tk.Button(self, text="Remove Equipment", command=helloCallBack, width=20, height=3)
-        self.change_reference_but = tk.Button(self, text="Change Reference", command=helloCallBack, width=20, height=3)
+        self.add_equipment_but = tk.Button(self, text="Add Equipment", command=featureMessage, width=20, height=3)
+        self.remove_equipment_but = tk.Button(self, text="Remove Equipment", command=featureMessage, width=20, height=3)
+        self.change_reference_but = tk.Button(self, text="Change Reference", command=featureMessage, width=20, height=3)
         self.exit_but = tk.Button(self, text="Exit", command=lambda: self.controller.show_frame("MainMenu"), width=20,
                                   height=3)
 
@@ -387,8 +517,15 @@ class ModifyMenu(tk.Frame):
 
 
 class ChangeName(tk.Frame):
-
+    """
+    This Frame asks the user to pick an exercise, a new name, and then changes the name of the exercise.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes ChangeName frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.name_error_message = False
@@ -414,6 +551,10 @@ class ChangeName(tk.Frame):
         self.exit_but.pack(pady=5)
 
     def check(self):
+        """
+        Checks all entries and selections to make sure they are valid
+        :return: None
+        """
         if not any(self.new_name_entry.get()) and not self.name_error_message:
             self.name_error_label.pack()
             self.name_error_message = True
@@ -424,6 +565,11 @@ class ChangeName(tk.Frame):
             self.change_name_option()
 
     def change_name_option(self):
+        """
+        Changes the name of the given Exercise based off the new name provided by the user in the
+        ChangeName frame
+        :return: None
+        """
         muscle_group = WAMethods.get_muscle_group(self.group_name.get(), push_list, pull_list, legs_list)
 
         muscle_group[self.muscle_name.get()][self.new_name_entry.get()] = muscle_group[self.muscle_name.get()].pop(
@@ -434,12 +580,23 @@ class ChangeName(tk.Frame):
         self.controller.show_frame("ChangeName")
 
     def exit(self):
+        """
+        Returns to ModifyMenu
+        :return: None
+        """
         self.controller.refresh_change_name()
         self.controller.show_frame("ModifyMenu")
 
 class ChangeMusclePageOne(tk.Frame):
-
+    """
+    This Frame asks the user to pick an exercise.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes ChangeMusclePageOne frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.error_message = False
@@ -461,6 +618,10 @@ class ChangeMusclePageOne(tk.Frame):
         self.exit_but.pack(pady=5)
 
     def check(self):
+        """
+        Checks to make sure all entries and selections are valid
+        :return: None
+        """
         if self.exercise_name.get() == "None" and not self.error_message:
             self.error_label.pack()
             self.error_message = True
@@ -468,12 +629,24 @@ class ChangeMusclePageOne(tk.Frame):
             self.controller.show_frame("ChangeMusclePageTwo")
 
     def exit(self):
+        """
+        Returns to ModifyMenu
+        :return:
+        """
         self.controller.refresh_change_muscle()
         self.controller.show_frame("ModifyMenu")
 
 class ChangeMusclePageTwo(tk.Frame):
-
+    """
+    This Frame asks the user to pick a new main muscle, for the previously picked exercise, and
+    then changes the main muscle of the exercise.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes ChangeMusclePageTwo frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -492,6 +665,10 @@ class ChangeMusclePageTwo(tk.Frame):
         self.exit_but.pack(pady=5)
 
     def change_muscle_option(self):
+        """
+        Changes the given Exercise's main muscle with the new given main muscle
+        :return: None
+        """
         muscle_group = WAMethods.get_muscle_group(self.controller.frames["ChangeMusclePageOne"].group_name.get(),
                                                 push_list, pull_list, legs_list)
         muscle_name = self. controller.frames["ChangeMusclePageOne"].muscle_name.get()
@@ -507,8 +684,14 @@ class ChangeMusclePageTwo(tk.Frame):
         self.controller.show_frame("ChangeMusclePageOne")
 
 
+# This class serves no purpose for now. It will be utilized in a future feature.
 class Settings(tk.Frame):
     def __init__(self, parent, controller):
+        """
+        Initializes Settings frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -528,6 +711,7 @@ class Settings(tk.Frame):
         self.exit_but.pack(pady=5)
 
 
+# This class serves no purpose as of now. It will be utilized in another future feature.
 class AddEquipment(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -572,6 +756,7 @@ class AddEquipment(tk.Frame):
         self.controller.show_frame("AddEquipment")
 
 
+# This class serves no purpose as of now. It will be utilized in a future feature.
 class RemoveEquipment(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -613,8 +798,16 @@ class RemoveEquipment(tk.Frame):
 
 
 class Load(tk.Frame):
-
+    """
+    This Frame asks the user if they want to load a previously saved file with the current list
+    or without. It then loads whichever option the user picked.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes Load frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
@@ -642,6 +835,11 @@ class Load(tk.Frame):
         self.exit_but.pack(pady=15)
 
     def load_option(self, option2):
+        """
+        Loads previous saved data. Returns to ViewExercises frame afterwards.
+        :param option2: If True, the function will clear the current exercise list.
+        :return: None
+        """
         if option2:
             for muscle in push_list:
                 push_list[muscle].clear()
@@ -688,8 +886,15 @@ class Load(tk.Frame):
 
 
 class Save(tk.Frame):
-
+    """
+    This Frame asks the user if they want to save, and then saves if the user chose to do so.
+    """
     def __init__(self, parent, controller):
+        """
+        Initializes Save frame
+        :param parent: Container
+        :param controller: Allows access to AppDriver class and methods
+        """
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.save_message = False
@@ -703,6 +908,10 @@ class Save(tk.Frame):
         self.exit_but.pack(pady=15)
 
     def save_option(self):
+        """
+        Saves the current exercise list by overriding the previous save file.
+        :return: None
+        """
         file = open("workoutappsave.txt", "w+")
 
         file.write("# Push Muscles")
@@ -755,6 +964,10 @@ class Save(tk.Frame):
             save_success_label.pack()
 
     def exit(self):
+        """
+        Returns to MainMenu
+        :return: None
+        """
         self.controller.refresh_save()
         self.controller.show_frame("MainMenu")
 
@@ -762,7 +975,9 @@ class Save(tk.Frame):
 
 
 class Exercise:
-
+    """
+    This class is used to store information in each exercise.
+    """
     def __init__(self, name, main, equipment, reference):
         self.name = name
         self.main_group = main
@@ -812,8 +1027,12 @@ class Exercise:
         return self.reference
 
 
-def helloCallBack():
-    messagebox.showinfo("Hello Python", "Feature in progress")
+def featureMessage():
+    """
+    Provides a message to user if they attempt to access incomplete Frames
+    :return: None
+    """
+    messagebox.showinfo("Naveen's Workout Organizer", "Feature in progress")
 
 
 if __name__ == "__main__":
