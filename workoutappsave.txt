@@ -1,0 +1,15 @@
+# Push Muscles
+- Chest
++ fdgdf
+- Shoulders
+- Triceps
+# Pull Muscles
+- Middle Back
+- Lower Back
+- Lats
+- Biceps
+# Leg Muscles
+- Quads
+- Hamstrings
+- Calves
+- Glutes
